@@ -1,8 +1,6 @@
 import java.io.File;
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.Queue;
 
 public class LadderGame {
     private HashMap<Integer, ArrayList<String>> myDictionary;
@@ -12,8 +10,22 @@ public class LadderGame {
     }
 
     public void play(String start, String end) {
-        // Words are same length, else print dif length
-        // Words are both in dictionary else print not in dictionary
+        if(start.length() != end.length()){
+            System.out.println("Word Lengths are not the Same");
+            return;
+        }
+//        for(int i = 0; i < myDictionary.get(start.length()); i++){
+//            if(start == myDictionary.get(start.length()[i])){
+//
+//            }
+//        }
+        WordInfo initialWordInfo = new WordInfo(start, 0);
+
+        // Create a queue to store partial solutions
+        Queue<WordInfo> partialSolutionQueue = new LinkedList<>();
+
+        // Add the initial ladder to the partial solution queue
+        partialSolutionQueue.enqueue(initialWordInfo);
 
     }
 
