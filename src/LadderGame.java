@@ -1,6 +1,6 @@
 import java.io.File;
 import java.util.*;
-import java.util.Queue;
+
 
 public class LadderGame {
     private HashMap<Integer, ArrayList<String>> myDictionary;
@@ -10,24 +10,63 @@ public class LadderGame {
     }
 
     public void play(String start, String end) {
-        if(start.length() != end.length()){
+        // Verify that the start/end words are the same length before starting
+        if (start.length() != end.length()) {
             System.out.println("Word Lengths are not the Same");
             return;
         }
-//        for(int i = 0; i < myDictionary.get(start.length()); i++){
-//            if(start == myDictionary.get(start.length()[i])){
-//
-//            }
+
+        // Verify that the start/end words are in the dictionary themselves
+//        if (!isInDictionary(start) || !isInDictionary(end)) {
+//            System.out.println("Start or End word not in the dictionary");
+//            return;
 //        }
+
+        // Create an initial ladder with the start word
         WordInfo initialWordInfo = new WordInfo(start, 0);
 
-        // Create a queue to store partial solutions
-        Queue<WordInfo> partialSolutionQueue = new LinkedList<>();
+        // Create an instance of your custom Queue class
+        Queue<WordInfo> partialSolutionQueue = new Queue<>();
 
         // Add the initial ladder to the partial solution queue
         partialSolutionQueue.enqueue(initialWordInfo);
 
+        // While the queue is not empty and the word ladder is not complete
+        while (!partialSolutionQueue.isEmpty()) {
+            // Remove the first item from the queue (current shortest partial ladder)
+            WordInfo currentWordInfo = partialSolutionQueue.dequeue();
+            String lastWord = currentWordInfo.getWord();
+
+            // Get one-away words using the provided function
+            ArrayList<String> oneAwayWords = oneAway(lastWord, true);
+
+            // For each one-away word
+            for (String word : oneAwayWords) {
+                // If the word is equal to the end word, then the word ladder is complete
+                if (word.equals(end)) {
+                    // Display the solution
+                    System.out.println(lastWord + " -> " + word + " : " + (currentWordInfo.getMoves() + 1) +
+                            " Moves [" + currentWordInfo.getHistory() + " " + word + "] total enqueues " +
+                            Queue.getTotalEnqueues());
+                    return; // End the loop as a solution is found
+                } else {
+                    // Extend the current ladder by appending the new word
+                    WordInfo newWordInfo = new WordInfo(word, currentWordInfo.getMoves() + 1,
+                            currentWordInfo.getHistory() + " " + word);
+
+                    // Add this new ladder to the queue
+                    partialSolutionQueue.enqueue(newWordInfo);
+                }
+            }
+        }
+
+        // If a solution was not found, indicate that a solution couldn't be found
+        System.out.println("No word ladder found.");
     }
+
+
+
+
 
     public ArrayList<String> oneAway(String word, boolean withRemoval) {
         ArrayList<String> words = new ArrayList<>(myDictionary.get(word.length()));

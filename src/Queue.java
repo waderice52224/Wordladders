@@ -36,6 +36,7 @@ public class Queue<E> {
     }
     private Node<E> front;
     private Node<E> rear;
+    private static int totalEnqueues = 0;
 
     public Queue() {
         this.front = null;
@@ -51,6 +52,10 @@ public class Queue<E> {
             rear.setNext(newNode);
             rear = newNode;
         }
+        totalEnqueues++;
+    }
+    public static int getTotalEnqueues() {
+        return totalEnqueues;
     }
 
     public E dequeue() {
